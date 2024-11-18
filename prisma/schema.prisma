@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs String
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate String
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Schedule {
+  id          Int     @id @default(autoincrement())
+  type        String // Should be ENUM
+  date        String // Should be Date/Datetime
+  time        String
+  place       String
+  durationMin Int
+  activity    String // Should be ENUM
+  groups      Group[] @relation("GroupSchedules")
+}
+
+model Group {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  users     User[]     @relation("UserGroups")
+  schedules Schedule[] @relation("GroupSchedules")
+}
+// TODO: add cascade delete/update
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  surname   String
+  birthdate String  // Should be Date
+  role      String  // Should be ENUM
+  photoURL  String?
+  isActive  Boolean  @default(true)
+  groups    Group[]  @relation("UserGroups")
+}
