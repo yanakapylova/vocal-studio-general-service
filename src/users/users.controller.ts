@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -61,8 +62,8 @@ export class UsersController {
   @ApiOkResponse({ description: 'User', type: UserDto })
   @ApiNotFoundResponse({ description: 'User doesn`t exist' })
   @HttpCode(201)
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
@@ -79,9 +80,12 @@ export class UsersController {
   })
   @UseGuards(AuthGuard)
   @HttpCode(204)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     console.log(id);
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
@@ -92,7 +96,7 @@ export class UsersController {
   @ApiNotFoundResponse({ description: 'Contact doesn`t exist' })
   @UseGuards(AuthGuard)
   @HttpCode(204)
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }

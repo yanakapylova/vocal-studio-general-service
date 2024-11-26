@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs String
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate String
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,15 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Type {
+  permanent
+  concert
+  additional
+}
+
+enum Activity {
+  vocal
+  choreo
+}
+
 model Schedule {
-  id          Int     @id @default(autoincrement())
-  type        String // Should be ENUM
-  date        String // Should be Date/Datetime
+  id          Int       @id @default(autoincrement())
+  type        Type
+  day         String?
+  date        DateTime?
   time        String
   place       String
   durationMin Int
-  activity    String // Should be ENUM
-  groups      Group[] @relation("GroupSchedules")
+  activity    Activity
+  groups      Group[]   @relation("GroupSchedules")
+}
+
+model Song {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  duration String
+  theme    String
+  groups   Group[] @relation("GroupSongs")
 }
 
 model Group {
@@ -29,17 +43,27 @@ model Group {
   name      String     @unique
   users     User[]     @relation("UserGroups")
   schedules Schedule[] @relation("GroupSchedules")
+  songs     Song[]     @relation("GroupSongs")
 }
-// TODO: add cascade delete/update
+
+enum Role {
+  student
+  teacher
+  admin
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  surname   String
-  birthdate String  // Should be Date
-  role      String  // Should be ENUM
-  photoURL  String?
-  isActive  Boolean  @default(true)
-  groups    Group[]  @relation("UserGroups")
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  name       String
+  surname    String
+  fathername String
+  birthdate  DateTime
+  school     String?
+  address    String?
+  role       Role
+  photoURL   String?
+  isActive   Boolean  @default(true)
+  groups     Group[]  @relation("UserGroups")
 }

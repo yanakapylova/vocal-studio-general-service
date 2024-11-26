@@ -6,29 +6,24 @@ import { PrismaService } from 'prisma/prisma.service';
 import { redisStore } from 'cache-manager-redis-yet';
 import { CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from 'src/constants/constants';
+import { jwtConstants, redisStoreConfig } from 'src/constants/constants';
 
 @Module({
   imports: [
     CacheModule.registerAsync({
       useFactory: async () => {
-        const store = await redisStore({
-          socket: {
-            host: process.env.REDIS_HOST || 'redis',
-            port: Number(process.env.REDIS_PORT) || 6379,
-          },
-        });
+        const store = await redisStore(redisStoreConfig);
 
         return {
           store: store as unknown as CacheStore,
-          ttl: 3 * 60000, // 3 minutes (milliseconds)
+          ttl: 60000, // 1 minute (milliseconds)
         };
       },
     }),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [GroupsController],

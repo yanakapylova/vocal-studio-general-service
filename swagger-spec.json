@@ -98,7 +98,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -140,7 +140,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -195,7 +195,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -219,6 +219,30 @@
         "summary": "",
         "tags": [
           "Users"
+        ]
+      }
+    },
+    "/api/auth": {
+      "post": {
+        "operationId": "AuthController_signin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
         ]
       }
     },
@@ -578,7 +602,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -620,7 +644,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -675,7 +699,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -691,51 +715,6 @@
           },
           "404": {
             "description": "Group doesn`t exist"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Groups"
-        ]
-      }
-    },
-    "/api/auth/login": {
-      "post": {
-        "description": "Signing in",
-        "operationId": "AuthController_signIn",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SignInUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "User has been successfully signed in",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoggedInUserDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Email or password are incorrect"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Groups are not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -909,6 +888,23 @@
             ]
           }
         }
+      },
+      "SignInUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "yana@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "qwerty"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "CreateScheduleDto": {
         "type": "object",
@@ -1125,53 +1121,6 @@
             ]
           }
         }
-      },
-      "SignInUserDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "example": "yana@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "qwerty"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "LoggedInUserDto": {
-        "type": "object",
-        "properties": {
-          "access_token": {
-            "type": "number",
-            "example": "qwerty"
-          },
-          "user": {
-            "type": "object",
-            "example": {
-              "id": 1,
-              "name": "Yana",
-              "surname": "K",
-              "email": "yana@gmail.com",
-              "password": "qwerty",
-              "role": "student",
-              "birthdate": "26-10-1999",
-              "photoURL": "image.png",
-              "groups": [
-                1,
-                2
-              ]
-            }
-          }
-        },
-        "required": [
-          "access_token",
-          "user"
-        ]
       }
     }
   }

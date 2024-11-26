@@ -1,27 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
-export class CreateGroupDto {
+export class CreateSongDto {
   @IsNotEmpty()
   @ApiProperty({ type: String, example: 'Crystal' })
   @IsString()
   name: string;
 
   @IsNotEmpty()
-  @ApiProperty({ type: String, example: [1, 2] })
+  @ApiProperty({ type: String, example: '3:48' })
   @IsArray()
   @IsOptional()
-  users?: number[];
+  duration: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ type: String, example: 'some theme' })
+  @IsArray()
+  @IsOptional()
+  theme: string;
 
   @IsNotEmpty()
   @ApiProperty({ type: String, example: [1, 2] })
   @IsArray()
   @IsOptional()
-  schedules?: number[];
-
-  @IsNotEmpty()
-  @ApiProperty({ type: String, example: [1, 2] })
-  @IsArray()
-  @IsOptional()
-  songs?: number[];
+  groups?: number[];
 }

@@ -5,6 +5,7 @@ import { PrismaService } from 'prisma/prisma.service';
 
 import { redisStore } from 'cache-manager-redis-yet';
 import { CacheModule, CacheStore } from '@nestjs/cache-manager';
+import { redisStoreConfig } from 'src/constants/constants';
 
 @Module({
   controllers: [UsersController],
@@ -12,12 +13,7 @@ import { CacheModule, CacheStore } from '@nestjs/cache-manager';
   imports: [
     CacheModule.registerAsync({
       useFactory: async () => {
-        const store = await redisStore({
-          socket: {
-            host: process.env.REDIS_HOST || 'redis',
-            port: Number(process.env.REDIS_PORT) || 6379,
-          },
-        });
+        const store = await redisStore(redisStoreConfig);
 
         return {
           store: store as unknown as CacheStore,
