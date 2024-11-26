@@ -27,6 +27,7 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupDto } from './dto/group.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CreateSongDto } from './dto/create-song.dto';
 
 @ApiTags('Groups')
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -97,5 +98,17 @@ export class GroupsController {
   @UseGuards(AuthGuard)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.groupsService.remove(id);
+  }
+
+  @Post('/song')
+  @ApiOperation({ description: 'Creating a new song' })
+  @ApiCreatedResponse({
+    description: 'Song has been successfully created',
+    type: [CreateSongDto],
+  })
+  @ApiConflictResponse({ description: 'Song with given email already exists' })
+  @HttpCode(201)
+  createSong(@Body() createSongDto: CreateSongDto) {
+    return this.groupsService.createSong(createSongDto);
   }
 }
