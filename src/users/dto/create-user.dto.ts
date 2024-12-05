@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import {
   IsDate,
   IsEmail,
@@ -19,6 +20,11 @@ export class CreateUserDto {
   @ApiProperty({ type: String, example: 'K' })
   surname: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ type: String, example: 'A' })
+  fathername: string;
+
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({ type: String, example: 'yana@gmail.com' })
@@ -32,12 +38,22 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ type: String, example: 'student' })
-  role: string;
+  role: Role;
 
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
-  @ApiProperty({ type: String, example: '26-10-1999' })
+  @ApiProperty({ type: String, example: "2024-11-21T00:00:00.000Z" })
   birthdate: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ type: String, example: 'some school' })
+  school?: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ type: String, example: 'some adress' })
+  address?: string;
 
   @IsOptional()
   @ApiProperty({ type: String, example: 'image.png' })

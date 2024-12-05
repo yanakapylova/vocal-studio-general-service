@@ -51,7 +51,7 @@ async function main() {
     where: { name: 'Будь первым' },
     update: {},
     create: {
-      name: 'Crystal',
+      name: 'Будь первым',
       duration: '3:48',
       theme: 'Вдохновляющая',
       groups: {

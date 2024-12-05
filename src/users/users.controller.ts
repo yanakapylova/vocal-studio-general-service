@@ -9,6 +9,7 @@ import {
   HttpCode,
   UseGuards,
   ParseIntPipe,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -46,6 +47,7 @@ export class UsersController {
   @ApiConflictResponse({ description: 'User with given email already exists' })
   @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.usersService.create(createUserDto);
   }
 

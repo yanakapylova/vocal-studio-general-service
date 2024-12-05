@@ -15,18 +15,18 @@ export class ScheduleService {
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto) {
-    const { groups, songs, ...newUser } = createScheduleDto;
+    const { date, groups, ...newSchedule } = createScheduleDto;
 
     await this.cacheManager.del('allSchedule');
     Logger.log('allSchedule cache has been removed');
     return await this.prisma.schedule.create({
       data: {
-        ...newUser,
+        date: new Date(date),
+        ...newSchedule,
         ...(groups && {
-          connect: groups.map((groupId) => ({ id: groupId })),
-        }),
-        ...(songs && {
-          connect: songs.map((songId) => ({ id: songId })),
+          groups: {
+            connect: groups.map((groupId) => ({ id: groupId })),
+          },
         }),
       },
     });

@@ -15,11 +15,11 @@ export class CreateScheduleDto {
   @ApiProperty({ type: String, example: 'permanent' })
   type: Type;
 
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
   @IsOptional()
-  @ApiProperty({ type: Date, example: '2024-11-21T00:00:00.000Z' })
-  date: Date;
+  @ApiProperty({ type: String, example: '2024-11-21T00:00:00.000Z' })
+  date: string;
 
   @IsNotEmpty()
   @IsOptional()
@@ -53,6 +53,7 @@ export class CreateScheduleDto {
 
   @IsArray()
   @IsNotEmpty()
+  @IsOptional()
   @ApiProperty({ type: String, example: [1, 2, 3] })
-  songs: number[];
+  songs?: number[];
 }

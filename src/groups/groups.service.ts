@@ -5,7 +5,6 @@ import { UpdateGroupDto } from './dto/update-group.dto';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Logger } from '@nestjs/common';
-import { CreateSongDto } from './dto/create-song.dto';
 
 @Injectable()
 export class GroupsService {
@@ -35,6 +34,8 @@ export class GroupsService {
   }
 
   async findAll() {
+    await this.cacheManager.del('allGroups');
+    Logger.log('allGroups cache has been removed');
     Logger.log('GET all groups');
     const value = await this.cacheManager.get('allGroups');
 
@@ -42,7 +43,11 @@ export class GroupsService {
       Logger.log('"allGroups" has been taken from cache');
       return value;
     } else {
-      const result = await this.prisma.group.findMany();
+      const result = await this.prisma.group.findMany({
+        include: {
+          songs: true,
+        },
+      });
       await this.cacheManager.set('allGroups', result);
       Logger.log("'allGroups' has been cached");
       return result;
@@ -127,19 +132,5 @@ export class GroupsService {
     } catch {
       console.log(`Группа с ID ${id} не найдена`);
     }
-  }
-
-  async createSong(createSongDto: CreateSongDto) {
-    const { groups, ...newSong } = createSongDto;
-    await this.cacheManager.del('allGroups');
-    Logger.log('allGroups cache has been removed');
-    return await this.prisma.group.create({
-      data: {
-        ...newSong,
-        ...(groups && {
-          connect: groups.map((groupId) => ({ id: groupId })),
-        }),
-      },
-    });
   }
 }

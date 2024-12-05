@@ -1,4 +1,10 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UnauthorizedException,
+  HttpException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInUserDto } from './dto/sign-in.dto';
 
@@ -12,7 +18,10 @@ export class AuthController {
     if (result) {
       return result;
     } else {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'something went wrong, please, try again later',
+        500,
+      );
     }
   }
 }

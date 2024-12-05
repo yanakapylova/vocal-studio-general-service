@@ -725,6 +725,117 @@
           "Groups"
         ]
       }
+    },
+    "/api/songs": {
+      "post": {
+        "operationId": "SongsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSongDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Songs"
+        ]
+      },
+      "get": {
+        "operationId": "SongsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Songs"
+        ]
+      }
+    },
+    "/api/songs/{id}": {
+      "get": {
+        "operationId": "SongsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Songs"
+        ]
+      },
+      "patch": {
+        "operationId": "SongsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSongDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Songs"
+        ]
+      },
+      "delete": {
+        "operationId": "SongsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Songs"
+        ]
+      }
     }
   },
   "info": {
@@ -755,6 +866,10 @@
             "type": "string",
             "example": "K"
           },
+          "fathername": {
+            "type": "string",
+            "example": "A"
+          },
           "email": {
             "type": "string",
             "example": "yana@gmail.com"
@@ -769,7 +884,15 @@
           },
           "birthdate": {
             "type": "string",
-            "example": "26-10-1999"
+            "example": "2024-11-21T00:00:00.000Z"
+          },
+          "school": {
+            "type": "string",
+            "example": "some school"
+          },
+          "address": {
+            "type": "string",
+            "example": "some adress"
           },
           "photoURL": {
             "type": "string",
@@ -786,10 +909,13 @@
         "required": [
           "name",
           "surname",
+          "fathername",
           "email",
           "password",
           "role",
           "birthdate",
+          "school",
+          "address",
           "photoURL",
           "groups"
         ]
@@ -809,6 +935,10 @@
             "type": "string",
             "example": "K"
           },
+          "fathername": {
+            "type": "string",
+            "example": "A"
+          },
           "email": {
             "type": "string",
             "example": "yana@gmail.com"
@@ -823,7 +953,15 @@
           },
           "birthdate": {
             "type": "string",
-            "example": "26-10-1999"
+            "example": "2024-11-21T00:00:00.000Z"
+          },
+          "school": {
+            "type": "string",
+            "example": "some school"
+          },
+          "address": {
+            "type": "string",
+            "example": "some adress"
           },
           "photoURL": {
             "type": "string",
@@ -841,10 +979,13 @@
           "id",
           "name",
           "surname",
+          "fathername",
           "email",
           "password",
           "role",
           "birthdate",
+          "school",
+          "address",
           "photoURL",
           "groups"
         ]
@@ -860,6 +1001,10 @@
             "type": "string",
             "example": "K"
           },
+          "fathername": {
+            "type": "string",
+            "example": "A"
+          },
           "email": {
             "type": "string",
             "example": "yana@gmail.com"
@@ -874,7 +1019,15 @@
           },
           "birthdate": {
             "type": "string",
-            "example": "26-10-1999"
+            "example": "2024-11-21T00:00:00.000Z"
+          },
+          "school": {
+            "type": "string",
+            "example": "some school"
+          },
+          "address": {
+            "type": "string",
+            "example": "some adress"
           },
           "photoURL": {
             "type": "string",
@@ -915,7 +1068,11 @@
           },
           "date": {
             "type": "string",
-            "example": "16-11"
+            "example": "2024-11-21T00:00:00.000Z"
+          },
+          "day": {
+            "type": "string",
+            "example": "ПН"
           },
           "time": {
             "type": "string",
@@ -940,16 +1097,26 @@
               2,
               3
             ]
+          },
+          "songs": {
+            "type": "string",
+            "example": [
+              1,
+              2,
+              3
+            ]
           }
         },
         "required": [
           "type",
           "date",
+          "day",
           "time",
           "place",
           "durationMin",
           "activity",
-          "groups"
+          "groups",
+          "songs"
         ]
       },
       "ScheduleDto": {
@@ -965,7 +1132,11 @@
           },
           "date": {
             "type": "string",
-            "example": "16-11"
+            "example": "2024-11-21T00:00:00.000Z"
+          },
+          "day": {
+            "type": "string",
+            "example": "ПН"
           },
           "time": {
             "type": "string",
@@ -990,16 +1161,26 @@
               2,
               3
             ]
+          },
+          "songs": {
+            "type": "string",
+            "example": [
+              1,
+              2,
+              3
+            ]
           }
         },
         "required": [
           "type",
           "date",
+          "day",
           "time",
           "place",
           "durationMin",
           "activity",
-          "groups"
+          "groups",
+          "songs"
         ]
       },
       "UpdateScheduleDto": {
@@ -1011,7 +1192,11 @@
           },
           "date": {
             "type": "string",
-            "example": "16-11"
+            "example": "2024-11-21T00:00:00.000Z"
+          },
+          "day": {
+            "type": "string",
+            "example": "ПН"
           },
           "time": {
             "type": "string",
@@ -1030,6 +1215,14 @@
             "example": "vocal"
           },
           "groups": {
+            "type": "string",
+            "example": [
+              1,
+              2,
+              3
+            ]
+          },
+          "songs": {
             "type": "string",
             "example": [
               1,
@@ -1059,12 +1252,20 @@
               1,
               2
             ]
+          },
+          "songs": {
+            "type": "string",
+            "example": [
+              1,
+              2
+            ]
           }
         },
         "required": [
           "name",
           "users",
-          "schedules"
+          "schedules",
+          "songs"
         ]
       },
       "GroupDto": {
@@ -1091,12 +1292,20 @@
               1,
               2
             ]
+          },
+          "songs": {
+            "type": "string",
+            "example": [
+              1,
+              2
+            ]
           }
         },
         "required": [
           "name",
           "users",
-          "schedules"
+          "schedules",
+          "songs"
         ]
       },
       "UpdateGroupDto": {
@@ -1114,6 +1323,67 @@
             ]
           },
           "schedules": {
+            "type": "string",
+            "example": [
+              1,
+              2
+            ]
+          },
+          "songs": {
+            "type": "string",
+            "example": [
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "CreateSongDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Crystal"
+          },
+          "duration": {
+            "type": "string",
+            "example": "3:48"
+          },
+          "theme": {
+            "type": "string",
+            "example": "some theme"
+          },
+          "groups": {
+            "type": "string",
+            "example": [
+              1,
+              2
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "duration",
+          "theme",
+          "groups"
+        ]
+      },
+      "UpdateSongDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Crystal"
+          },
+          "duration": {
+            "type": "string",
+            "example": "3:48"
+          },
+          "theme": {
+            "type": "string",
+            "example": "some theme"
+          },
+          "groups": {
             "type": "string",
             "example": [
               1,
