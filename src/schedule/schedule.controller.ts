@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -57,7 +58,7 @@ export class ScheduleController {
   @ApiOkResponse({ description: 'Schedule', type: ScheduleDto })
   @ApiNotFoundResponse({ description: 'Schedule doesn`t exist' })
   @HttpCode(200)
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.scheduleService.findOne(id);
   }
 
@@ -66,7 +67,7 @@ export class ScheduleController {
   @ApiOkResponse({ description: 'Schedule', type: ScheduleDto })
   @ApiNotFoundResponse({ description: 'Schedule/User doesn`t exist' })
   @HttpCode(200)
-  async getUserSchedule(@Param('id') id: number) {
+  async getUserSchedule(@Param('id', ParseIntPipe) id: number) {
     return await this.scheduleService.findUserSchedule(id);
   }
 
@@ -81,7 +82,7 @@ export class ScheduleController {
   })
   @HttpCode(204)
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateScheduleDto: UpdateScheduleDto,
   ) {
     return this.scheduleService.update(id, updateScheduleDto);
@@ -94,7 +95,7 @@ export class ScheduleController {
   })
   @ApiNotFoundResponse({ description: 'Contact doesn`t exist' })
   @HttpCode(204)
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.scheduleService.remove(id);
   }
 }

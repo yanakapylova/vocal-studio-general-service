@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { ScheduleModule } from './schedule/schedule.module';
-import { GroupsModule } from './groups/groups.module';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { Module } from "@nestjs/common";
+import { UsersModule } from "./users/users.module";
+import { ScheduleModule } from "./schedule/schedule.module";
+import { GroupsModule } from "./groups/groups.module";
+import { ConfigModule } from "@nestjs/config";
+import { AuthModule } from "./auth/auth.module";
+import { SongsModule } from "./songs/songs.module";
 
 @Module({
   imports: [
@@ -11,7 +12,11 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
     ScheduleModule,
     GroupsModule,
-    ConfigModule.forRoot(),
+    SongsModule,
+
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
 })
 export class AppModule {}

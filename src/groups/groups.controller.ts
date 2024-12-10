@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -61,8 +62,8 @@ export class GroupsController {
   @ApiOkResponse({ description: 'Group', type: GroupDto })
   @ApiNotFoundResponse({ description: 'Group doesn`t exist' })
   @HttpCode(200)
-  findOne(@Param('id') id: string) {
-    return this.groupsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.groupsService.findOne(id);
   }
 
   @Patch(':id')
@@ -79,8 +80,11 @@ export class GroupsController {
   })
   @UseGuards(AuthGuard)
   @HttpCode(204)
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupsService.update(+id, updateGroupDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateGroupDto: UpdateGroupDto,
+  ) {
+    return this.groupsService.update(id, updateGroupDto);
   }
 
   @Delete(':id')
@@ -91,7 +95,7 @@ export class GroupsController {
   @ApiNotFoundResponse({ description: 'Group doesn`t exist' })
   @HttpCode(204)
   @UseGuards(AuthGuard)
-  remove(@Param('id') id: string) {
-    return this.groupsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.groupsService.remove(id);
   }
 }

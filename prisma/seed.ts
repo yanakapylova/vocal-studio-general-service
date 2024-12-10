@@ -6,33 +6,33 @@ async function main() {
   const schedule1 = await prisma.schedule.create({
     data: {
       type: 'permanent',
-      date: 'ПН',
+      day: 'ПН',
       time: '19:00',
       place: 'ГЦК',
       durationMin: 90,
-      activity: 'Вокал',
+      activity: 'vocal',
     },
   });
 
   const schedule2 = await prisma.schedule.create({
     data: {
       type: 'additional',
-      date: '21.01',
-      time: '18:00',
+      date: new Date(2024, 11, 21),
+      time: '16:00',
       place: 'ГЦК',
       durationMin: 90,
-      activity: 'Вокал',
+      activity: 'vocal',
     },
   });
 
   const schedule3 = await prisma.schedule.create({
     data: {
       type: 'concert',
-      date: '22.01',
-      time: '15:00',
+      date: new Date(2024, 11, 21),
+      time: '18:00',
       place: 'ГЦК',
       durationMin: 90,
-      activity: 'Вокал',
+      activity: 'vocal',
     },
   });
 
@@ -47,6 +47,19 @@ async function main() {
     },
   });
 
+  const song1 = await prisma.song.upsert({
+    where: { name: 'Будь первым' },
+    update: {},
+    create: {
+      name: 'Будь первым',
+      duration: '3:48',
+      theme: 'Вдохновляющая',
+      groups: {
+        connect: [{ id: 1 }],
+      },
+    },
+  });
+
   const salt = 10;
   const hash1 = await bcrypt.hash('qwerty', salt);
 
@@ -56,14 +69,17 @@ async function main() {
     create: {
       name: 'Yana',
       surname: 'K',
-      birthdate: '26.10.1999',
+      fathername: 'A',
+      birthdate: new Date(1999, 10, 26),
       email: 'yana@gmail.com',
       password: hash1,
       role: 'student',
+      school: 'Какая-то школа',
+      address: 'Какай-то адрес',
       groups: {
         connect: [{ id: 1 }],
       },
-      photoURL: '',
+      photoURL: null,
     },
   });
 
@@ -74,7 +90,8 @@ async function main() {
     create: {
       name: 'Kristina',
       surname: 'R',
-      birthdate: '03.07.1975',
+      fathername: 'A',
+      birthdate: new Date(1975, 7, 3),
       email: 'kristina@gmail.com',
       password: hash2,
       role: 'teacher',
@@ -85,7 +102,15 @@ async function main() {
     },
   });
 
-  console.log({ schedule1, schedule2, schedule3, group1, student, teacher });
+  console.log({
+    schedule1,
+    schedule2,
+    schedule3,
+    group1,
+    song1,
+    student,
+    teacher,
+  });
 }
 
 main()

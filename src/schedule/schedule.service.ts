@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { PrismaService } from 'prisma/prisma.service';
@@ -15,15 +15,18 @@ export class ScheduleService {
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto) {
-    const { groups, ...newUser } = createScheduleDto;
+    const { date, groups, ...newSchedule } = createScheduleDto;
 
     await this.cacheManager.del('allSchedule');
-    Logger.log("allSchedule cache has been removed")
+    Logger.log('allSchedule cache has been removed');
     return await this.prisma.schedule.create({
       data: {
-        ...newUser,
+        date: new Date(date),
+        ...newSchedule,
         ...(groups && {
-          connect: groups.map((groupId) => ({ id: groupId })),
+          groups: {
+            connect: groups.map((groupId) => ({ id: groupId })),
+          },
         }),
       },
     });
@@ -70,15 +73,22 @@ export class ScheduleService {
   }
 
   async findOne(id: number) {
-    const result = await this.prisma.schedule.findUnique({
-      where: { id },
-      include: { groups: true },
-    });
-
-    if (!result) {
-      throw new HttpException(`Расписание с ID ${id} не найдено`, 400);
+    await this.cacheManager.del('allSchedule');
+    Logger.log('allSchedule cache has been removed');
+    try {
+      console.log(id);
+      const result = await this.prisma.schedule.findUniqueOrThrow({
+        where: { id: id },
+        // include: { groups: true },
+      });
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw new HttpException(
+        `Schedule with id ${id} is not found`,
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return result;
   }
 
   async update(id: number, updateScheduleDto: UpdateScheduleDto) {
@@ -98,7 +108,7 @@ export class ScheduleService {
       };
 
       await this.cacheManager.del('allSchedule');
-      Logger.log("allSchedule cache has been removed")
+      Logger.log('allSchedule cache has been removed');
       return this.prisma.schedule.update({
         where: { id },
         data: updateData,
@@ -119,9 +129,9 @@ export class ScheduleService {
       });
 
       await this.cacheManager.del('allSchedule');
-      Logger.log("allSchedule cache has been removed")
-    } catch {
-      console.log(`Расписание с ID ${id} не найдено`);
+      Logger.log('allSchedule cache has been removed');
+    } catch (err) {
+      console.log(err);
     }
   }
 }
