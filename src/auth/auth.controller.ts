@@ -1,14 +1,8 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UnauthorizedException,
-  HttpException,
-} from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignInUserDto } from './dto/sign-in.dto';
+import { Controller, Post, Body, HttpException, Logger } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { SignInUserDto } from "./dto/sign-in.dto";
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -19,8 +13,8 @@ export class AuthController {
       return result;
     } else {
       throw new HttpException(
-        'something went wrong, please, try again later',
-        500,
+        "something went wrong, please, try again later",
+        500
       );
     }
   }

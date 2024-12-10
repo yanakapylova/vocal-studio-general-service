@@ -1,0 +1,24 @@
+services:
+  server:
+    ports:
+      - "3008:3008"
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://postgres:isJwpraVpEitLBHmdRaQgNBQYcEDvSAf@autorack.proxy.rlwy.net:56201/railway
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - PORT=3008
+      - SALT=10
+      - REDIS_HOST=autorack.proxy.rlwy.net
+      - REDIS_PORT=52633
+      - REDIS_PASSWORD=hgwIsLwyJuwYzMlMbomFcZzIODYJnttn
+    networks:
+      - vocal-studio
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+networks:
+  vocal-studio:
+    driver: bridge
