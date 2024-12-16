@@ -12,7 +12,18 @@ Make sure you have the following installed:
 
 ### Running the Server
 
-#### Option 1: Using the Internal Docker Compose File
+#### Option 1: Using the Unified Docker Compose File (preferable)
+
+1. Request the unified Docker Compose file from the application developer.
+
+2. Use the unified Docker Compose file to run all services, including the server, databases, and RabbitMQ:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. The server will start on port `3008` as part of the complete setup.
+
+#### Option 2: Using the Internal Docker Compose File
 
 1. Clone the repository:
    ```bash
@@ -35,19 +46,7 @@ Make sure you have the following installed:
    ```bash
    docker-compose up --build
    ```
-
 4. The server will start on port `3008`.
-
-#### Option 2: Using the Unified Docker Compose File
-
-1. Request the unified Docker Compose file from the application developer.
-
-2. Use the unified Docker Compose file to run all services, including the server, databases, and RabbitMQ:
-   ```bash
-   docker-compose up --build
-   ```
-
-3. The server will start on port `3008` as part of the complete setup.
 
 ## Configuration
 
