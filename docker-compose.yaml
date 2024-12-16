@@ -3,21 +3,71 @@ services:
     ports:
       - "3008:3008"
     build:
-      context: ./server
+      context: ./vocal-studio-general-service
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql://postgres:isJwpraVpEitLBHmdRaQgNBQYcEDvSAf@autorack.proxy.rlwy.net:56201/railway
-      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - DATABASE_URL=postgresql://yana:qwerty@postgres:5432/postgresql
       - PORT=3008
-      - SALT=10
-      - REDIS_HOST=autorack.proxy.rlwy.net
-      - REDIS_PORT=52633
-      - REDIS_PASSWORD=hgwIsLwyJuwYzMlMbomFcZzIODYJnttn
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     networks:
       - vocal-studio
     depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
+
+  postgres:
+    ports:
+      - "5432:5432"
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: yana
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: postgresql
+    networks:
+      - vocal-studio
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yana -d postgresql"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    ports:
+      - "6379:6379"
+    image: redis:latest
+    container_name: redis
+    networks:
+      - vocal-studio
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # AMQP port
+      - "15672:15672" # UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - vocal-studio
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmqctl status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
 networks:
   vocal-studio:
