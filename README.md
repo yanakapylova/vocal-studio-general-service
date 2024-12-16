@@ -27,8 +27,8 @@ Make sure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/yanakapylova/vocal-studio-general-service
+   cd https://github.com/yanakapylova/vocal-studio-general-service
    ```
 
 2. Set up RabbitMQ separately by running the following command:
