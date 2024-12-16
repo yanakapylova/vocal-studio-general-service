@@ -7,7 +7,6 @@ import * as bcrypt from "bcryptjs";
 import { Cache } from "cache-manager";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Logger } from "@nestjs/common";
-import { Http2ServerRequest } from "http2";
 import { handleError } from "errorHandler";
 
 // TODO: add try/catch where needed
@@ -26,6 +25,7 @@ export class UsersService {
 
     await this.cacheManager.del("allUsers");
     Logger.log("allUsers cache has been removed");
+
     try {
       return this.prisma.user.create({
         data: {
@@ -42,8 +42,8 @@ export class UsersService {
           groups: true,
         },
       });
-    } catch (err) {
-      throw new HttpException(err, 500);
+    } catch (error) {
+      handleError("Error creating a user", error);
     }
   }
 
@@ -63,8 +63,6 @@ export class UsersService {
           },
         });
         await this.cacheManager.set("allUsers", result);
-
-        Logger.log("All users were got successfuly");
         return result;
       }
     } catch (error) {
@@ -82,7 +80,7 @@ export class UsersService {
 
       return result;
     } catch (error) {
-      handleError("Error retrieving user", error);
+      handleError(`Error retrieving the user with id ${id}`, error);
     }
   }
 
@@ -95,7 +93,7 @@ export class UsersService {
       });
       return user;
     } catch (error) {
-      handleError("Error retrieving user", error);
+      handleError(`Error retrieving the user with email ${email}`, error);
     }
   }
 
@@ -117,13 +115,13 @@ export class UsersService {
         }),
       };
 
-      // await this.cacheManager.del('allUsers');
+      await this.cacheManager.del("allUsers");
       return await this.prisma.user.update({
         where: { id },
         data: updateData,
       });
     } catch (error) {
-      handleError("Error retrieving user", error);
+      handleError(`Error updating the user with id ${id}`, error);
     }
   }
 
@@ -138,7 +136,7 @@ export class UsersService {
 
       await this.cacheManager.del("allUsers");
     } catch (error) {
-      Logger.error("Error retrieving user: " + error);
+      Logger.error(`Error deleting the user with id ${id}` + error);
     }
   }
 }

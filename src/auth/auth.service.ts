@@ -1,10 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  Logger,
-  OnModuleInit,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { SignInUserDto } from "./dto/sign-in.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { UsersService } from "src/users/users.service";
@@ -19,6 +13,7 @@ export class AuthService {
 
   async signin(signInUserDto: SignInUserDto) {
     try {
+      Logger.log("User is signing in...");
       const data = await firstValueFrom(
         this.rabbitClient.send({ cmd: "signin" }, signInUserDto)
       );
@@ -38,9 +33,8 @@ export class AuthService {
           groups: user.groups,
         },
       };
-    } catch (err) {
-      Logger.error(err);
-
+    } catch (error) {
+      Logger.error("Error creating a group: " + error);
       return null;
     }
   }
