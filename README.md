@@ -18,7 +18,7 @@ Make sure you have the following installed:
    cd https://github.com/yanakapylova/vocal-studio-general-service
    ```
 
-3. Start the server using the internal Docker Compose file:
+3. Start the server using the Docker Compose file:
    ```bash
    docker-compose up --build
    ```
