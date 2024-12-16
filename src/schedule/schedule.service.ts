@@ -15,9 +15,10 @@ export class ScheduleService {
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto) {
+    Logger.log('Creating schedule');
     const { date, groups, ...newSchedule } = createScheduleDto;
 
-    await this.cacheManager.del('allSchedule');
+    await this.cacheManager.del('allSchedules');
     Logger.log('allSchedule cache has been removed');
     return await this.prisma.schedule.create({
       data: {
@@ -73,7 +74,7 @@ export class ScheduleService {
   }
 
   async findOne(id: number) {
-    await this.cacheManager.del('allSchedule');
+    await this.cacheManager.del('allSchedules');
     Logger.log('allSchedule cache has been removed');
     try {
       console.log(id);
@@ -107,7 +108,7 @@ export class ScheduleService {
         }),
       };
 
-      await this.cacheManager.del('allSchedule');
+      await this.cacheManager.del('allSchedules');
       Logger.log('allSchedule cache has been removed');
       return this.prisma.schedule.update({
         where: { id },
@@ -128,7 +129,7 @@ export class ScheduleService {
         where: { id },
       });
 
-      await this.cacheManager.del('allSchedule');
+      await this.cacheManager.del('allSchedules');
       Logger.log('allSchedule cache has been removed');
     } catch (err) {
       console.log(err);
