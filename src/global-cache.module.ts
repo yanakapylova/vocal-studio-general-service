@@ -1,18 +1,14 @@
 import { Module, Global } from "@nestjs/common";
 import { CacheModule, CacheStore } from "@nestjs/cache-manager"; // Или ваш аналогичный модуль
 import { redisStore } from "cache-manager-redis-yet";
+import { redisStoreConfig } from "./constants/constants";
 
 @Global()
 @Module({
   imports: [
     CacheModule.registerAsync({
       useFactory: async () => {
-        const store = await redisStore({
-          socket: {
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-          },
-        });
+        const store = await redisStore(redisStoreConfig);
 
         return {
           store: store as unknown as CacheStore,
