@@ -12,35 +12,10 @@ Make sure you have the following installed:
 
 ### Running the Server
 
-#### Option 1: Using the Unified Docker Compose File (preferable)
-
-1. Request the unified Docker Compose file from the application developer.
-
-2. Use the unified Docker Compose file to run all services, including the server, databases, and RabbitMQ:
-   ```bash
-   docker-compose up --build
-   ```
-
-3. The server will start on port `3008` as part of the complete setup.
-
-#### Option 2: Using the Internal Docker Compose File
-
 1. Clone the repository:
    ```bash
    git clone https://github.com/yanakapylova/vocal-studio-general-service
    cd https://github.com/yanakapylova/vocal-studio-general-service
-   ```
-
-2. Set up RabbitMQ separately by running the following command:
-   ```bash
-   docker run -d \
-      --name rabbitmq \
-      --network vocal-studio \
-      -p 5672:5672 \
-      -p 15672:15672 \
-      -e RABBITMQ_DEFAULT_USER=guest \
-      -e RABBITMQ_DEFAULT_PASS=guest \
-      rabbitmq:management
    ```
 
 3. Start the server using the internal Docker Compose file:
@@ -52,8 +27,21 @@ Make sure you have the following installed:
 ## Configuration
 
 - **Port**: The application runs on port `3008` by default.
-- **RabbitMQ**: Ensure RabbitMQ is set up using the command above or through the unified Docker Compose file.
-- **Database**: The server connects to a remote database specified in the internal Docker Compose file or the unified configuration.
+The following services and databases will be started as part of the unified Docker Compose setup:
+
+- **Server**: The core backend service of Vocal Studio, running on port `3008`.
+  - Connects to the PostgreSQL database and RabbitMQ message broker.
+  - Uses Redis for caching.
+
+- **PostgreSQL**: A relational database, running on port `5432`.
+
+- **Redis**: An in-memory data store for caching, running on port `6379`.
+
+- **RabbitMQ**: A message broker, running on the following ports:
+  - `5672`: AMQP port for communication between services.
+  - `15672`: Management UI port.
+
+All services are connected via the `vocal-studio` Docker network to ensure seamless communication.
 
 ## Troubleshooting
 
