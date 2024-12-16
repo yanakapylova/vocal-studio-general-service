@@ -46,7 +46,6 @@ Make sure you have the following installed:
    ```bash
    docker-compose up --build
    ```
-
 4. The server will start on port `3008`.
 
 ## Configuration
