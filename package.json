@@ -1,4 +1,5 @@
 {
+  // TODO: "project-name"?
   "name": "project-name",
   "version": "0.0.1",
   "description": "",
@@ -25,6 +26,8 @@
     "start:migrate:seed": "prisma migrate deploy && npm run seed",
     "start:migrate:seed:prod": "npm run start:migrate:seed && npm run start:prod"
   },
+  // TODO: Fix dependency vulnerabilities
+  // edddd(3 moderate severity vulnerabilities)
   "dependencies": {
     "@nestjs/cache-manager": "^2.3.0",
     "@nestjs/common": "^10.0.0",

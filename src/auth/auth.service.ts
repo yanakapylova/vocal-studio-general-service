@@ -15,9 +15,13 @@ export class AuthService {
     try {
       Logger.log("User is signing in...");
       const data = await firstValueFrom(
+        // TODO: Follow one naming style
+        // E.g. choose `signin` or `signIn`
         this.rabbitClient.send({ cmd: "signin" }, signInUserDto)
       );
 
+      // TODO: Avoid using magic strings
+      // Add types for `data` object
       const user = await this.userService.findOne(data["user"].id);
       return {
         access_token: data["access_token"],

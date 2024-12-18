@@ -10,6 +10,8 @@ import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
+    // TODO: Prefer asynchronous modules mounting
+    // E.g. use `registerAsync` method here
     ClientsModule.register([
       {
         name: "AUTH_SERVICE",

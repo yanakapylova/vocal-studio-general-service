@@ -34,6 +34,8 @@ import { UserDto } from "./dto/user.dto";
 @ApiForbiddenResponse({ description: "Forbidden" })
 @ApiNotFoundResponse({ description: "Contacts are not found" })
 @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
+// TODO: Recommend using leading slash in URL paths
+// E.g. use `@Controller("/users")` here
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -47,6 +49,8 @@ export class UsersController {
   @ApiConflictResponse({ description: "User with given email already exists" })
   @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
+    // TODO: Use app logger instead of console
+    // TODO: Set linter to warn on console usage
     console.log(createUserDto);
     return this.usersService.create(createUserDto);
   }

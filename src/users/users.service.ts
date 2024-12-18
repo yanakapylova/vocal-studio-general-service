@@ -71,6 +71,9 @@ export class UsersService {
   }
 
   async findOne(id: number) {
+    // TODO: Avoid putting all code into try/catch block
+    // When you put all code into try-catch you miss details (if user not found it should be 404)
+    // If you want to aggregate and log error use global exception filter
     try {
       Logger.log("Getting the user with id " + id);
       const result = await this.prisma.user.findUniqueOrThrow({
@@ -125,6 +128,9 @@ export class UsersService {
     }
   }
 
+  // TODO: Omit typing, use types inference
+  // Write code on TypeScript not on "typed JS"
+  // E.g. remove `: Promise<void>` from method signature
   async remove(id: number): Promise<void> {
     Logger.log("Deleting the user with id " + id);
     try {

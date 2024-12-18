@@ -1,3 +1,7 @@
+// TODO: Recommend using no-extension JSON-schemed configs
+
+// TODO: Add Prettier config
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {

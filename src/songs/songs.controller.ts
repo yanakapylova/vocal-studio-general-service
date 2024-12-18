@@ -31,6 +31,8 @@ export class SongsController {
   }
 
   @Patch(':id')
+  // TODO: Why not to use pipes for parsing/validating params?
+  // E.g. `@Param('id', ParseIntPipe) id: number`
   update(@Param('id') id: string, @Body() updateSongDto: UpdateSongDto) {
     return this.songsService.update(+id, updateSongDto);
   }

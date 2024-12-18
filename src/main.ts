@@ -18,7 +18,10 @@ async function bootstrap() {
   // Init Swagger docs
   setupSwagger(app);
 
+  // TODO: Use only ConfigService to retrieve envs
   await app.listen(process.env.PORT);
+
+  // TODO: Recommend add app bootstrap status message
 }
 
 bootstrap();

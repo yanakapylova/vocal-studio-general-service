@@ -14,6 +14,7 @@ import { SongsModule } from "./songs/songs.module";
     GroupsModule,
     SongsModule,
 
+    // TODO: Add ENVs validation
     ConfigModule.forRoot({
       isGlobal: true,
     }),
