@@ -10,6 +10,9 @@ import {
   UseGuards,
   ParseIntPipe,
   HttpException,
+  UseInterceptors,
+  UploadedFile,
+  Res,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -28,6 +31,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserDto } from './dto/user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
 @ApiTags('Users')
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -100,5 +105,23 @@ export class UsersController {
   @HttpCode(204)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Get('csv/template')
+  @ApiOperation({ description: 'Download CSV template for users import' })
+  @ApiOkResponse({ description: 'CSV template file' })
+  @HttpCode(200)
+  downloadTemplate(@Res() res: Response) {
+    return this.usersService.downloadTemplate(res);
+  }
+
+  @Post('csv/import')
+  @ApiOperation({ description: 'Import users from CSV file' })
+  @ApiCreatedResponse({ description: 'Users imported successfully' })
+  @ApiConflictResponse({ description: 'Some users already exist or invalid data' })
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(201)
+  importUsers(@UploadedFile() file: Express.Multer.File) {
+    return this.usersService.importUsers(file);
   }
 }

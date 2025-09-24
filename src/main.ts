@@ -5,20 +5,18 @@ import { setupSwagger } from './swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Bind middlewares
   app.enableCors();
-
-  // Bind global prefix
-  app.setGlobalPrefix('api');
-
-  // Bind global Pipes
+  app.setGlobalPrefix('api', { exclude: ['doc'] });
   app.useGlobalPipes(new ValidationPipe());
-
-  // Init Swagger docs
   setupSwagger(app);
-
   await app.listen(process.env.PORT);
+
+  console.log(
+    `Server is running on http://${process.env.HOST}:${process.env.PORT}/api`,
+  );
+  console.log(
+    `Swagger is running on http://${process.env.HOST}:${process.env.PORT}/docs`,
+  );
 }
 
 bootstrap();

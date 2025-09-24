@@ -1,43 +1,54 @@
 import {
-  Inject,
   Injectable,
-  OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignInUserDto } from './dto/sign-in.dto';
-import { ClientProxy } from '@nestjs/microservices';
 import { UsersService } from 'src/users/users.service';
-import { firstValueFrom } from 'rxjs';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    @Inject('AUTH_SERVICE') private rabbitClient: ClientProxy,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signin(signInUserDto: SignInUserDto) {
     try {
-      const data = await firstValueFrom(
-        this.rabbitClient.send({ cmd: 'signin' }, signInUserDto),
-      );
+      const user = await this.userService.findUserForAuth(signInUserDto.email);
 
-      const user = await this.userService.findOne(data['user'].id);
+      if (!user || !user.password) {
+        throw new UnauthorizedException();
+      }
+
+      const isMatch = await bcrypt.compare(signInUserDto.password, user.password);
+      if (!isMatch) {
+        throw new UnauthorizedException();
+      }
+
+      const payload = { sub: user.id, email: user.email };
+      const access_token = await this.jwtService.signAsync(payload);
+
+      const fullUser = await this.userService.findOne(user.id);
       return {
-        access_token: data['access_token'],
+        access_token,
         user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          surname: user.surname,
-          birthdate: user.birthdate,
-          role: user.role,
-          photoURL: user.photoURL,
-          isActive: user.isActive,
-          groups: user.groups,
+          id: fullUser.id,
+          email: fullUser.email,
+          name: fullUser.name,
+          surname: fullUser.surname,
+          birthdate: fullUser.birthdate,
+          role: fullUser.role,
+          photoURL: fullUser.photoURL,
+          isActive: fullUser.isActive,
+          groups: fullUser.groups,
         },
       };
-    } catch {
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
       return null;
     }
   }

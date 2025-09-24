@@ -1,8 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 
@@ -10,18 +8,17 @@ import { PrismaService } from 'prisma/prisma.service';
 export class SongsService {
   constructor(
     private prisma: PrismaService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(createSongDto: CreateSongDto) {
     const { groups, ...newSong } = createSongDto;
-    await this.cacheManager.del('allGroups');
-    Logger.log('allGroups cache has been removed');
-    return await this.prisma.group.create({
+    return await this.prisma.song.create({
       data: {
         ...newSong,
         ...(groups && {
-          connect: groups.map((groupId) => ({ id: groupId })),
+          groups: {
+            connect: groups.map((groupId) => ({ id: groupId })),
+          },
         }),
       },
     });
@@ -29,30 +26,19 @@ export class SongsService {
 
   async findAll() {
     Logger.log('GET all songs');
-    const value = await this.cacheManager.get('allSongs');
-
-    if (value) {
-      Logger.log('"allSongs" has been taken from cache');
-      return value;
-    } else {
-      const result = await this.prisma.song.findMany({
-        include: {
-          groups: true,
-        },
-      });
-      await this.cacheManager.set('allSongs', result);
-      Logger.log("'allSongs' has been cached");
-      return result;
-    }
+    const result = await this.prisma.song.findMany({
+      include: {
+        groups: true,
+      },
+    });
+    return result;
   }
 
   async findOne(id: number) {
     try {
       const result = await this.prisma.song.findUniqueOrThrow({
         where: { id },
-        include: {
-          groups: true,
-        },
+        include: { groups: true },
       });
       return result;
     } catch {
@@ -64,28 +50,24 @@ export class SongsService {
     try {
       const existingSong = await this.prisma.song.findUniqueOrThrow({
         where: { id },
-        include: {
-          groups: true,
-        },
+        include: { groups: true },
       });
-
-      const { groups } = updateSongDto;
+      const { groups, ...songData } = updateSongDto;
 
       const updateData: any = {
+        ...songData,
         ...(groups && {
-          set: existingSong.groups.map((user) => ({ id: user.id })),
-          connect: groups.map((userId) => ({ id: userId })),
+          set: existingSong.groups.map((group) => ({ id: group.id })),
+          connect: groups.map((groupId) => ({ id: groupId })),
         }),
       };
 
-      await this.cacheManager.del('allSongs');
-      Logger.log('allSongs cache has been removed');
-      return await this.prisma.song.update({
+      return this.prisma.song.update({
         where: { id },
         data: updateData,
       });
     } catch {
-      `Песня с ID ${id} не найдена`;
+      console.log(`Песня с ID ${id} не найдена`);
     }
   }
 
@@ -98,11 +80,8 @@ export class SongsService {
       await this.prisma.song.delete({
         where: { id },
       });
-
-      await this.cacheManager.del('allSongs');
-      Logger.log('allSongs cache has been removed');
-    } catch {
-      console.log(`Song with ID ${id} not found`);
+    } catch (err) {
+      console.log(err);
     }
   }
 }

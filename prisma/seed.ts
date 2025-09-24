@@ -47,6 +47,22 @@ async function main() {
     },
   });
 
+  const group2 = await prisma.group.upsert({
+    where: { name: 'Тип-топ' },
+    update: {},
+    create: {
+      name: 'Тип-топ',
+    },
+  });
+
+  const group3 = await prisma.group.upsert({
+    where: { name: 'Crystal Kids' },
+    update: {},
+    create: {
+      name: 'Crystal Kids',
+    },
+  });
+
   const song1 = await prisma.song.upsert({
     where: { name: 'Будь первым' },
     update: {},
@@ -60,10 +76,36 @@ async function main() {
     },
   });
 
+  const song2 = await prisma.song.upsert({
+    where: { name: 'Звездный путь' },
+    update: {},
+    create: {
+      name: 'Звездный путь',
+      duration: '4:12',
+      theme: 'Космическая',
+      groups: {
+        connect: [{ id: 2 }],
+      },
+    },
+  });
+
+  const song3 = await prisma.song.upsert({
+    where: { name: 'Детские мечты' },
+    update: {},
+    create: {
+      name: 'Детские мечты',
+      duration: '3:25',
+      theme: 'Детская',
+      groups: {
+        connect: [{ id: 3 }],
+      },
+    },
+  });
+
   const salt = 10;
   const hash1 = await bcrypt.hash('qwerty', salt);
 
-  const student = await prisma.user.upsert({
+  const student1 = await prisma.user.upsert({
     where: { email: 'yana@gmail.com' },
     update: {},
     create: {
@@ -78,6 +120,106 @@ async function main() {
       address: 'Какай-то адрес',
       groups: {
         connect: [{ id: 1 }],
+      },
+      photoURL: null,
+    },
+  });
+
+  const student2 = await prisma.user.upsert({
+    where: { email: 'anna@gmail.com' },
+    update: {},
+    create: {
+      name: 'Anna',
+      surname: 'Petrova',
+      fathername: 'Vladimirovna',
+      birthdate: new Date(2005, 3, 15),
+      email: 'anna@gmail.com',
+      password: hash1,
+      role: 'student',
+      school: 'Школа №1',
+      address: 'ул. Ленина, 10',
+      groups: {
+        connect: [{ id: 1 }, { id: 2 }],
+      },
+      photoURL: null,
+    },
+  });
+
+  const student3 = await prisma.user.upsert({
+    where: { email: 'maria@gmail.com' },
+    update: {},
+    create: {
+      name: 'Maria',
+      surname: 'Ivanova',
+      fathername: 'Sergeevna',
+      birthdate: new Date(2007, 8, 22),
+      email: 'maria@gmail.com',
+      password: hash1,
+      role: 'student',
+      school: 'Гимназия №2',
+      address: 'пр. Победы, 5',
+      groups: {
+        connect: [{ id: 2 }],
+      },
+      photoURL: null,
+    },
+  });
+
+  const student4 = await prisma.user.upsert({
+    where: { email: 'elena@gmail.com' },
+    update: {},
+    create: {
+      name: 'Elena',
+      surname: 'Sidorova',
+      fathername: 'Nikolaevna',
+      birthdate: new Date(2006, 11, 8),
+      email: 'elena@gmail.com',
+      password: hash1,
+      role: 'student',
+      school: 'Лицей №3',
+      address: 'ул. Мира, 15',
+      groups: {
+        connect: [{ id: 3 }],
+      },
+      photoURL: null,
+    },
+  });
+
+  const student5 = await prisma.user.upsert({
+    where: { email: 'sofia@gmail.com' },
+    update: {},
+    create: {
+      name: 'Sofia',
+      surname: 'Kozlova',
+      fathername: 'Andreevna',
+      birthdate: new Date(2008, 1, 30),
+      email: 'sofia@gmail.com',
+      password: hash1,
+      role: 'student',
+      school: 'Школа №4',
+      address: 'ул. Садовая, 20',
+      groups: {
+        connect: [{ id: 3 }],
+      },
+      photoURL: null,
+    },
+  });
+
+  const student6 = await prisma.user.upsert({
+    where: { email: 'daria@gmail.com' },
+    update: {},
+    create: {
+      name: 'Daria',
+      surname: 'Morozova',
+      fathername: 'Dmitrievna',
+      birthdate: new Date(2004, 6, 12),
+      email: 'daria@gmail.com',
+      password: hash1,
+      role: 'student',
+      school: 'Школа №5',
+      address: 'ул. Центральная, 7',
+      groups: {
+        connect: [{ id: 1 }, { id: 3 }],
       },
       photoURL: null,
     },
@@ -103,12 +245,10 @@ async function main() {
   });
 
   console.log({
-    schedule1,
-    schedule2,
-    schedule3,
-    group1,
-    song1,
-    student,
+    schedules: [schedule1, schedule2, schedule3],
+    groups: [group1, group2, group3],
+    songs: [song1, song2, song3],
+    students: [student1, student2, student3, student4, student5, student6],
     teacher,
   });
 }
